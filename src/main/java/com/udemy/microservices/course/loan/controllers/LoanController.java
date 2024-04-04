@@ -2,6 +2,7 @@ package com.udemy.microservices.course.loan.controllers;
 
 import com.udemy.microservices.course.loan.constants.LoanConstants;
 import com.udemy.microservices.course.loan.dtos.ErrorResponseDto;
+import com.udemy.microservices.course.loan.dtos.LoanContactInfoDto;
 import com.udemy.microservices.course.loan.dtos.LoanDto;
 import com.udemy.microservices.course.loan.dtos.ResponseDto;
 import com.udemy.microservices.course.loan.services.ILoanService;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,24 @@ import javax.validation.constraints.Pattern;
 public class LoanController {
 
     private final ILoanService loanService;
+    private final LoanContactInfoDto loanContactInfoDto;
+
+    @Value("${build.version}")
+    private String buildVersion;
+
+    @Operation(summary = "Get build details")
+    @ApiResponse(responseCode = "200", description = "Build Details")
+    @GetMapping("/build-details")
+    public ResponseEntity<String> getBuildDetails() {
+        return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+    }
+
+    @Operation(summary = "Get contact details")
+    @ApiResponse(responseCode = "200", description = "Contact Details")
+    @GetMapping("/contact-details")
+    public ResponseEntity<LoanContactInfoDto> getContactDetails() {
+        return ResponseEntity.status(HttpStatus.OK).body(loanContactInfoDto);
+    }
 
     @Operation(summary = "Create Loan REST API", description = "REST API to create new loan inside EazyBank")
     @ApiResponses({
